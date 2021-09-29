@@ -1,4 +1,4 @@
-package ru.studyit.strudentschedule
+package ru.studyit.studentschedule
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,10 +1,9 @@
-package ru.studyit.strudentschedule
+package ru.studyit.studentschedule.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import ru.studyit.strudentschedule.databinding.ActivityLoginBinding
-import ru.studyit.strudentschedule.databinding.ActivityStudentInfoBinding
+import ru.studyit.studentschedule.databinding.ActivityStudentInfoBinding
 
 class CActivityStudentInfo : AppCompatActivity() {
 

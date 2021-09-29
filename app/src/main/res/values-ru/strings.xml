@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">StrudentSchedule</string>
+    <string name="app_name">Расписание занятий</string>
     <string name="Login">Войти</string>
+    <string name="MyAccount">Мои данные</string>
+    <string name="Exit">Выход</string>
 </resources>

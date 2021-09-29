@@ -1,10 +1,9 @@
-package ru.studyit.strudentschedule
+package ru.studyit.studentschedule.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import ru.studyit.strudentschedule.databinding.ActivityLoginBinding
+import ru.studyit.studentschedule.databinding.ActivityLoginBinding
 
 class CActivityLogin : AppCompatActivity() {
 
@@ -19,7 +18,7 @@ class CActivityLogin : AppCompatActivity() {
 
         binding.btLogin.setOnClickListener {
             //binding.pbLogin.visibility = View.VISIBLE
-            val intent = Intent(this, CActivityMenu::class.java)
+            val intent = Intent(this, CActivityLessonList::class.java)
             intent.putExtra("LOGIN", binding.etLogin.text.toString())
 
             startActivity(intent)

@@ -1,4 +1,4 @@
-package ru.studyit.strudentschedule
+package ru.studyit.studentschedule
 
 import org.junit.Test
 
