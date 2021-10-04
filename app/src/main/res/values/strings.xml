@@ -3,4 +3,7 @@
     <string name="Login">Login</string>
     <string name="MyAccount">My account</string>
     <string name="Exit">Exit</string>
+    <string name="Subject">Subject</string>
+    <string name="Date">Date</string>
+    <string name="Time">Time</string>
 </resources>

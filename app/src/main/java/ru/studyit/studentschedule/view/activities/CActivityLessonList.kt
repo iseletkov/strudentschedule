@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import ru.studyit.studentschedule.R
@@ -29,7 +31,10 @@ class CActivityLessonList : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         binding = ActivityLessonListBinding.inflate(layoutInflater)
+
         val view = binding.root
         setContentView(view)
 
@@ -39,8 +44,20 @@ class CActivityLessonList : AppCompatActivity() {
         lessons.add(CLesson("Численные методы", LocalDateTime.parse("2021-09-30 09:45",formatter)))
         lessons.add(CLesson("Физкультура", LocalDateTime.parse("2021-09-30 11:30",formatter)))
 
-        val adapter = CRecyclerViewLessonListAdapter(lessons)
+
+        val listener =
+            CRecyclerViewLessonListAdapter.IClickListener { lesson, index ->
+                val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
+                intent.putExtra("PARAM_LESSON_SUBJECT", lesson.subject)
+                intent.putExtra("PARAM_LESSON_DATE", lesson.dateTime.toString())
+                intent.putExtra("PARAM_LESSON_INDEX", index)
+                resultLauncher.launch(intent)
+            }
+
+        val adapter = CRecyclerViewLessonListAdapter(lessons, listener)
         binding.rvLessonList.adapter = adapter
+
+        binding.rvLessonList.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

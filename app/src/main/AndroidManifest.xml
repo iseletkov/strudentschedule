@@ -10,13 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentSchedule">
         <activity
-            android:name="ru.studyit.studentschedule.view.activities.CActivityStudentInfo"
+            android:name=".view.activities.CActivityLesson"
             android:exported="true" />
         <activity
-            android:name="ru.studyit.studentschedule.view.activities.CActivityLessonList"
+            android:name=".view.activities.CActivityStudentInfo"
             android:exported="true" />
         <activity
-            android:name="ru.studyit.studentschedule.view.activities.CActivityLogin"
+            android:name=".view.activities.CActivityLessonList"
+            android:exported="true" />
+        <activity
+            android:name=".view.activities.CActivityLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
