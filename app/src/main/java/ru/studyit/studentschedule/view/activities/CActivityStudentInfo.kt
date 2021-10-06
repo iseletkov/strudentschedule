@@ -17,7 +17,7 @@ class CActivityStudentInfo : AppCompatActivity() {
 
         binding.button2.setOnClickListener {
             val intent = Intent()
-            intent.putExtra("PARAM_123", 123)
+            intent.putExtra("PARAM_ACTIVITY_NAME", "CActivityStudentInfo")
             setResult(RESULT_OK, intent)
             finish()
         }

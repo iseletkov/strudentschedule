@@ -12,7 +12,7 @@ class CRecyclerViewLessonListAdapter (
     private val listener : IClickListener?
 ) :    RecyclerView.Adapter<CRecyclerViewLessonListAdapter.ViewHolder>() {
 
-    val formatter = DateTimeFormat.forPattern("YYYY-MM-DD HH:mm")
+    val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
 
     /**
      * Provide a reference to the type of views that you are using

@@ -20,11 +20,32 @@ import ru.studyit.studentschedule.view.adapters.CRecyclerViewLessonListAdapter
 class CActivityLessonList : AppCompatActivity() {
     private lateinit var binding: ActivityLessonListBinding
 
+    private val lessons = ArrayList<CLesson>()
+
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
             val data: Intent? = result.data
-            val x = data?.getIntExtra("PARAM_123", 0)
+            when(data?.getStringExtra("PARAM_ACTIVITY_NAME"))
+            {
+                "CActivityLesson" -> {
+                    val index = data.getIntExtra("PARAM_LESSON_INDEX", -1)
+                    val subject = data.getStringExtra("PARAM_LESSON_SUBJECT")?:""
+                    val sDateTime = data.getStringExtra("PARAM_LESSON_DATE")
+
+                    val lesson = lessons[index]
+                    lesson.subject = subject
+                    lesson.dateTime = LocalDateTime.parse(sDateTime)
+
+                    binding.rvLessonList.adapter?.notifyItemChanged(index)
+
+                }
+                "CActivityStudentInfo" -> {
+                    val index = data?.getIntExtra("PARAM_123", 0)
+                }
+            }
+
+
         }
 
     }
@@ -38,8 +59,8 @@ class CActivityLessonList : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val formatter = DateTimeFormat.forPattern("YYYY-MM-DD HH:mm")
-        val lessons = ArrayList<CLesson>()
+        val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+
         lessons.add(CLesson("Математика", LocalDateTime.parse("2021-09-30 08:00",formatter)))
         lessons.add(CLesson("Численные методы", LocalDateTime.parse("2021-09-30 09:45",formatter)))
         lessons.add(CLesson("Физкультура", LocalDateTime.parse("2021-09-30 11:30",formatter)))
