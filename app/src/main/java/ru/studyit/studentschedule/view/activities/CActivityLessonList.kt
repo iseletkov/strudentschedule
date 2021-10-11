@@ -90,16 +90,39 @@ class CActivityLessonList : AppCompatActivity() {
         binding.rvLessonList.layoutManager = LinearLayoutManager(this)
 
         //Обработчик нажатий плавающей кнопки.
-        binding.fabAddLesson.setOnClickListener {
-            val lesson = CLesson("", LocalDateTime.now())
+//        binding.fabAddLesson.setOnClickListener {
+//            val lesson = CLesson("", LocalDateTime.now())
+//
+//            lessons.add(lesson)
+//
+//            val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
+//            intent.putExtra("PARAM_LESSON_SUBJECT", lesson.subject)
+//            intent.putExtra("PARAM_LESSON_DATE", lesson.dateTime.toString())
+//            intent.putExtra("PARAM_LESSON_INDEX", lessons.size-1)
+//            resultLauncher.launch(intent)
+//
+//        }
 
-            lessons.add(lesson)
+        binding.bottomNavigationLessonList.setOnItemSelectedListener { item->
+            when(item.itemId) {
+                R.id.miExit -> {
+                    finishAffinity()
+                    true
+                }
+                R.id.miAddLesson -> {
+                    val lesson = CLesson("", LocalDateTime.now())
 
-            val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
-            intent.putExtra("PARAM_LESSON_SUBJECT", lesson.subject)
-            intent.putExtra("PARAM_LESSON_DATE", lesson.dateTime.toString())
-            intent.putExtra("PARAM_LESSON_INDEX", lessons.size-1)
-            resultLauncher.launch(intent)
+                    lessons.add(lesson)
+
+                    val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
+                    intent.putExtra("PARAM_LESSON_SUBJECT", lesson.subject)
+                    intent.putExtra("PARAM_LESSON_DATE", lesson.dateTime.toString())
+                    intent.putExtra("PARAM_LESSON_INDEX", lessons.size-1)
+                    resultLauncher.launch(intent)
+                    true
+                }
+                else -> false
+            }
 
         }
 
