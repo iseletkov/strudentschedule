@@ -66,8 +66,10 @@ class CActivityLessonList : AppCompatActivity() {
         lessons.add(CLesson("Физкультура", LocalDateTime.parse("2021-09-30 11:30",formatter)))
 
 
-        val listener =
-            CRecyclerViewLessonListAdapter.IClickListener { lesson, index ->
+        //Обработчик клика на элемент списка, открывает форму редактирования/просмотра выбанного элемента.
+        val listener = object : CRecyclerViewLessonListAdapter.IClickListener
+        {
+            override fun onItemClick(lesson: CLesson, index: Int) {
                 val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
                 intent.putExtra("PARAM_LESSON_SUBJECT", lesson.subject)
                 intent.putExtra("PARAM_LESSON_DATE", lesson.dateTime.toString())
@@ -75,10 +77,32 @@ class CActivityLessonList : AppCompatActivity() {
                 resultLauncher.launch(intent)
             }
 
+            override fun onItemDeleteClick(lesson: CLesson, index: Int) {
+                lessons.removeAt(index);
+                binding.rvLessonList.adapter?.notifyItemRemoved(index);
+            }
+        }
+
+
         val adapter = CRecyclerViewLessonListAdapter(lessons, listener)
         binding.rvLessonList.adapter = adapter
 
         binding.rvLessonList.layoutManager = LinearLayoutManager(this)
+
+        //Обработчик нажатий плавающей кнопки.
+        binding.fabAddLesson.setOnClickListener {
+            val lesson = CLesson("", LocalDateTime.now())
+
+            lessons.add(lesson)
+
+            val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
+            intent.putExtra("PARAM_LESSON_SUBJECT", lesson.subject)
+            intent.putExtra("PARAM_LESSON_DATE", lesson.dateTime.toString())
+            intent.putExtra("PARAM_LESSON_INDEX", lessons.size-1)
+            resultLauncher.launch(intent)
+
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

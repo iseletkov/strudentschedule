@@ -22,8 +22,7 @@ class CRecyclerViewLessonListAdapter (
         : RecyclerView.ViewHolder(binding.root)
     {
          var lesson : CLesson? = null
-        var index : Int = -1
-        }
+    }
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -42,22 +41,25 @@ class CRecyclerViewLessonListAdapter (
         viewHolder.binding.tvSubject.text = lessons[position].subject
         viewHolder.binding.tvDateTime.text = lessons[position].dateTime.toString(formatter)
         viewHolder.lesson = lessons[position]
-        viewHolder.index = position
 
         viewHolder.binding.llLesson.setOnClickListener {
-
             viewHolder.lesson?.let { lesson ->
-                listener?.onItemClick(lesson, viewHolder.index)
+
+
+                listener?.onItemClick(lesson, lessons.indexOf(lesson))
             }
 
-
-
-
+        }
+        viewHolder.binding.buttonDeleteLesson.setOnClickListener {
+            viewHolder.lesson?.let { lesson ->
+                listener?.onItemDeleteClick(lesson, lessons.indexOf(lesson))
+            }
         }
 
     }
-    fun interface IClickListener{
+    interface IClickListener{
         fun onItemClick(lesson : CLesson, index : Int)
+        fun onItemDeleteClick(lesson : CLesson, index : Int)
     }
 
 
