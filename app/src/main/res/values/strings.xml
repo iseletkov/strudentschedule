@@ -8,4 +8,6 @@
     <string name="Time">Time</string>
     <string name="Save">Save</string>
     <string name="AddLesson">Add lesson</string>
+    <string name="PARAM_LOGIN" translatable="false">LOGIN</string>
+    <string name="FILE_NAME_PREFERENCES" translatable="false">Preferences</string>
 </resources>

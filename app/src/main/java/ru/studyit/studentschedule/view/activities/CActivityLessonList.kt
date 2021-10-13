@@ -1,6 +1,7 @@
 package ru.studyit.studentschedule.view.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -142,6 +143,13 @@ class CActivityLessonList : AppCompatActivity() {
                 true
             }
             R.id.miExit -> {
+                val sharedPref = applicationContext.getSharedPreferences(getString(R.string.FILE_NAME_PREFERENCES), Context.MODE_PRIVATE)
+
+                with (sharedPref.edit()) {
+                    putString( getString(R.string.PARAM_LOGIN),"")
+                    apply()
+                }
+
                 finishAffinity()
                 true
             }
