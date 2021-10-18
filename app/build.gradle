@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -48,14 +49,17 @@ dependencies {
     def roomVersion = "2.3.0"
 
     implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 
+    //for livedata
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-rc01'
     // To use Kotlin annotation processing tool (kapt)
     //kapt("androidx.room:room-compiler:$roomVersion")
     // To use Kotlin Symbolic Processing (KSP)
     //ksp("androidx.room:room-compiler:$roomVersion")
 
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$roomVersion")
+    //implementation("androidx.room:room-ktx:$roomVersion")
 
 }

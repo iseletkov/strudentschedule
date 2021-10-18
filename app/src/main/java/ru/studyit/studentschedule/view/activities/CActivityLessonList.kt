@@ -8,15 +8,24 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import ru.studyit.studentschedule.R
+import ru.studyit.studentschedule.dao.IDAOLessons
 import ru.studyit.studentschedule.databinding.ActivityLessonListBinding
 import ru.studyit.studentschedule.model.CLesson
+import ru.studyit.studentschedule.util.CDatabase
 import ru.studyit.studentschedule.view.adapters.CRecyclerViewLessonListAdapter
+import java.util.UUID
+import kotlin.collections.ArrayList
 
 class CActivityLessonList : AppCompatActivity() {
     private lateinit var binding: ActivityLessonListBinding
@@ -62,9 +71,9 @@ class CActivityLessonList : AppCompatActivity() {
 
         val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
 
-        lessons.add(CLesson("Математика", LocalDateTime.parse("2021-09-30 08:00",formatter)))
-        lessons.add(CLesson("Численные методы", LocalDateTime.parse("2021-09-30 09:45",formatter)))
-        lessons.add(CLesson("Физкультура", LocalDateTime.parse("2021-09-30 11:30",formatter)))
+        lessons.add(CLesson(UUID.fromString("b75d453c-96f6-48a0-9619-15dc70590d59"), "Математика", LocalDateTime.parse("2021-09-30 08:00",formatter)))
+        lessons.add(CLesson(UUID.fromString("3f1a4f26-d983-4b59-a4a7-ebc59b68a34a"), "Численные методы", LocalDateTime.parse("2021-09-30 09:45",formatter)))
+        lessons.add(CLesson(UUID.fromString("85fae227-4459-4897-bb53-c63bf95f6b1c"), "Физкультура", LocalDateTime.parse("2021-09-30 11:30",formatter)))
 
 
         //Обработчик клика на элемент списка, открывает форму редактирования/просмотра выбанного элемента.
@@ -90,20 +99,6 @@ class CActivityLessonList : AppCompatActivity() {
 
         binding.rvLessonList.layoutManager = LinearLayoutManager(this)
 
-        //Обработчик нажатий плавающей кнопки.
-//        binding.fabAddLesson.setOnClickListener {
-//            val lesson = CLesson("", LocalDateTime.now())
-//
-//            lessons.add(lesson)
-//
-//            val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
-//            intent.putExtra("PARAM_LESSON_SUBJECT", lesson.subject)
-//            intent.putExtra("PARAM_LESSON_DATE", lesson.dateTime.toString())
-//            intent.putExtra("PARAM_LESSON_INDEX", lessons.size-1)
-//            resultLauncher.launch(intent)
-//
-//        }
-
         binding.bottomNavigationLessonList.setOnItemSelectedListener { item->
             when(item.itemId) {
                 R.id.miExit -> {
@@ -111,7 +106,7 @@ class CActivityLessonList : AppCompatActivity() {
                     true
                 }
                 R.id.miAddLesson -> {
-                    val lesson = CLesson("", LocalDateTime.now())
+                    val lesson = CLesson(UUID.randomUUID(), "", LocalDateTime.now())
 
                     lessons.add(lesson)
 
@@ -127,7 +122,35 @@ class CActivityLessonList : AppCompatActivity() {
 
         }
 
+
+        val db = CDatabase.getDatabase(this)
+        val daoLessons = db.daoLessons()
+        lifecycleScope.launch {
+            createInitialData(daoLessons)
+        }
+
+
+        // Create the observer which updates the UI.
+        val observerLessons = Observer<List<CLesson>> { test_lessons ->
+            // Update the UI
+            val x=0;
+        }
+
+        daoLessons.getAll().observe(this,observerLessons)
+
+
+
+
     }
+    private suspend fun createInitialData(daoLessons : IDAOLessons) = withContext(Dispatchers.IO)
+    {
+        lessons.forEach { lesson ->
+            daoLessons.insert(lesson)
+
+
+        }
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
