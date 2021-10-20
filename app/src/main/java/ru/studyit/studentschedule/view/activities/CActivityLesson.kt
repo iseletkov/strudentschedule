@@ -4,17 +4,29 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
+import ru.studyit.studentschedule.R
+import ru.studyit.studentschedule.dao.IDAOLessons
 import ru.studyit.studentschedule.databinding.ActivityLessonBinding
+import ru.studyit.studentschedule.model.CLesson
+import ru.studyit.studentschedule.util.CDatabase
 import java.util.*
 
 class CActivityLesson : AppCompatActivity() {
     private lateinit var binding: ActivityLessonBinding
     //val formatterDate = DateTimeFormat.forPattern("yyy-MM-DD")
-    val formatterTime = DateTimeFormat.forPattern("HH:mm")
+    private val formatterTime = DateTimeFormat.forPattern("HH:mm")
+
+    private var date : LocalDate? = null
+    private var time : LocalTime? = null
+
+    private lateinit var lesson : CLesson
+    private lateinit var daoLessons : IDAOLessons
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,30 +34,24 @@ class CActivityLesson : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val index = intent.getIntExtra("PARAM_LESSON_INDEX", -1)
+        val db = CDatabase.getDatabase(this)
+        daoLessons = db.daoLessons()
+        val sId = intent.getStringExtra(getString(R.string.PARAM_LESSON_ID))
+        val id = UUID.fromString(sId)
+        lifecycleScope.launch {
+            lesson = daoLessons.findById(id)
+            showLesson()
+        }
+
+
+
+        /*val index = intent.getIntExtra("PARAM_LESSON_INDEX", -1)
 
         var subject = intent.getStringExtra("PARAM_LESSON_SUBJECT")
         var dateTimeString = intent.getStringExtra("PARAM_LESSON_DATE")
+        */
 
-        binding.editTextSubject.setText(subject)
 
-        var dateTime = LocalDateTime.parse(dateTimeString)
-
-        var date : LocalDate? = null
-        var time : LocalTime? = null
-
-        binding.calendarView.date = dateTime.toDate().time
-
-        if (Build.VERSION.SDK_INT >= 23 )
-        {
-            binding.timePicker.hour = dateTime.hourOfDay
-            binding.timePicker.minute = dateTime.minuteOfHour
-        }
-        else
-        {
-            binding.timePicker.currentHour = dateTime.hourOfDay
-            binding.timePicker.currentMinute = dateTime.minuteOfHour
-        }
 
         binding.calendarView.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
 
@@ -70,33 +76,49 @@ class CActivityLesson : AppCompatActivity() {
         binding.buttonSave.setOnClickListener {
             //Сохранить данные
 
-            subject = binding.editTextSubject.text.toString()
+            lesson.subject = binding.editTextSubject.text.toString()
             //val  = LocalDate.fromDateFields(Date(binding.calendarView.date))
 
+
+
             date?.let {
-                dateTime = dateTime
+                lesson.dateTime = lesson.dateTime
                     .withYear(it.year)
                     .withMonthOfYear(it.monthOfYear)
                     .withDayOfMonth(it.dayOfMonth)
             }
 
             time?.let {
-                dateTime = dateTime
+                lesson.dateTime = lesson.dateTime
                     .withHourOfDay(it.hourOfDay)
                     .withMinuteOfHour(it.minuteOfHour)
             }
 
-
-            //Завершить активность с передачей данных в родительскую активность.
-            val intent = Intent()
-            intent.putExtra("PARAM_ACTIVITY_NAME", "CActivityLesson")
-            intent.putExtra("PARAM_LESSON_INDEX", index)
-            intent.putExtra("PARAM_LESSON_SUBJECT", subject)
-            intent.putExtra("PARAM_LESSON_DATE", dateTime.toString())
-
-            setResult(RESULT_OK, intent)
+            lifecycleScope.launch {
+                daoLessons.update(lesson)
+            }
             finish()
 
+        }
+    }
+    /*
+     * Отображение данных из урока на форме.
+     */
+    private fun showLesson()
+    {
+        binding.editTextSubject.setText(lesson.subject)
+
+        binding.calendarView.date = lesson.dateTime.toDate().time
+
+        if (Build.VERSION.SDK_INT >= 23 )
+        {
+            binding.timePicker.hour = lesson.dateTime.hourOfDay
+            binding.timePicker.minute = lesson.dateTime.minuteOfHour
+        }
+        else
+        {
+            binding.timePicker.currentHour = lesson.dateTime.hourOfDay
+            binding.timePicker.currentMinute = lesson.dateTime.minuteOfHour
         }
     }
 }

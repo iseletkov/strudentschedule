@@ -8,11 +8,18 @@ import ru.studyit.studentschedule.databinding.LessonListItemBinding
 import ru.studyit.studentschedule.model.CLesson
 
 class CRecyclerViewLessonListAdapter (
-    private val lessons: ArrayList<CLesson>,
+    private var lessons: List<CLesson>,
     private val listener : IClickListener?
 ) :    RecyclerView.Adapter<CRecyclerViewLessonListAdapter.ViewHolder>() {
 
     val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+
+    fun updateData(lessons : List<CLesson>)
+    {
+        this.lessons = lessons
+        notifyDataSetChanged()
+
+    }
 
     /**
      * Provide a reference to the type of views that you are using

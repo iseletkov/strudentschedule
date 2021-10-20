@@ -14,4 +14,5 @@ class CLesson (
     var subject : String,
     @ColumnInfo(name = "date_time")
     var dateTime : LocalDateTime
+
 )

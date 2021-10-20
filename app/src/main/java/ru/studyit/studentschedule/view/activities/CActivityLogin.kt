@@ -31,6 +31,10 @@ class CActivityLogin : AppCompatActivity() {
 
         binding.btLogin.setOnClickListener {
             val login = binding.etLogin.text.toString()
+            val password = binding.etLogin.text.toString()
+
+
+
 
             //binding.pbLogin.visibility = View.VISIBLE
             val sharedPref = applicationContext.getSharedPreferences(getString(R.string.FILE_NAME_PREFERENCES), Context.MODE_PRIVATE)

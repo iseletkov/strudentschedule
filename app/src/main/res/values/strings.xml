@@ -10,4 +10,5 @@
     <string name="AddLesson">Add lesson</string>
     <string name="PARAM_LOGIN" translatable="false">LOGIN</string>
     <string name="FILE_NAME_PREFERENCES" translatable="false">Preferences</string>
+    <string name="PARAM_LESSON_ID" translatable="false">LESSON_ID</string>
 </resources>
