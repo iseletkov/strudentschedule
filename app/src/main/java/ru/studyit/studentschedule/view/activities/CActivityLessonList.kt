@@ -24,6 +24,8 @@ import ru.studyit.studentschedule.dao.IDAOLessons
 import ru.studyit.studentschedule.databinding.ActivityLessonListBinding
 import ru.studyit.studentschedule.model.CLesson
 import ru.studyit.studentschedule.util.CDatabase
+import ru.studyit.studentschedule.util.rest.CRetrofitBuilder
+import ru.studyit.studentschedule.util.rest.IServerAPITemplate
 import ru.studyit.studentschedule.view.adapters.CRecyclerViewLessonListAdapter
 import java.util.UUID
 import kotlin.collections.ArrayList
@@ -63,6 +65,14 @@ class CActivityLessonList : AppCompatActivity() {
 
         val view = binding.root
         setContentView(view)
+
+
+        val retrofit = CRetrofitBuilder.getRetrofit()
+        val service = retrofit.create(IServerAPITemplate::class.java)
+        lifecycleScope.launch {
+            val temp_lessons = service.getAllLessons()
+            val x = 0;
+        }
 
 
 
