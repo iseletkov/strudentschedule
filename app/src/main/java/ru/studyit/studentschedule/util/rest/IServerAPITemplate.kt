@@ -6,4 +6,5 @@ import ru.studyit.studentschedule.model.CLesson
 interface IServerAPITemplate {
     @GET("/lessons")
     suspend fun getAllLessons(): List<CLesson>
+
 }
