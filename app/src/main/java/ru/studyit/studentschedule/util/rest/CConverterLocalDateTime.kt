@@ -5,8 +5,8 @@ import com.squareup.moshi.ToJson
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 
-class CConverterDateTimeToJson {
-   private val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+class CConverterLocalDateTime {
+   private val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss")
 
     @FromJson
     fun fromJson(value: String): LocalDateTime {

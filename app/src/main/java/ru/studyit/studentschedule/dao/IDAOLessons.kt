@@ -17,7 +17,7 @@ interface IDAOLessons {
 
 
     @Query("SELECT * FROM lessons WHERE id = :id1")
-    suspend fun findById(id1: UUID): CLesson
+    suspend fun findById(id1: UUID): CLesson?
 
     @Insert
     suspend fun insert(lesson: CLesson)

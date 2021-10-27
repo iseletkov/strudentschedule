@@ -21,7 +21,8 @@ class CRetrofitBuilder {
             synchronized(this) {
 
                 val moshi = Moshi.Builder()
-                    .add(CConverterDateTimeToJson::class)
+                    .add(CConverterLocalDateTime())
+                    .add(CConverterUUID())
                     .build()
 
 

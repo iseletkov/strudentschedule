@@ -67,12 +67,7 @@ class CActivityLessonList : AppCompatActivity() {
         setContentView(view)
 
 
-        val retrofit = CRetrofitBuilder.getRetrofit()
-        val service = retrofit.create(IServerAPITemplate::class.java)
-        lifecycleScope.launch {
-            val temp_lessons = service.getAllLessons()
-            val x = 0;
-        }
+
 
 
 
@@ -135,6 +130,32 @@ class CActivityLessonList : AppCompatActivity() {
             daoLessons.getAllFlow().collect { test_lessons ->
                 adapter.updateData(test_lessons)
             }
+        }
+
+        val retrofit = CRetrofitBuilder.getRetrofit()
+        val service = retrofit.create(IServerAPITemplate::class.java)
+        lifecycleScope.launch {
+            val temp_lessons = service.getAllLessons()
+            val lessonsFromDB = daoLessons.getAll()
+            lessonsFromDB
+                .filter {currentLesson ->
+                    return@filter !temp_lessons.contains(currentLesson)
+                }
+                .forEach { currentLesson ->
+                    //Удалять
+                    daoLessons.delete(currentLesson)
+                }
+
+            temp_lessons.forEach { lesson ->
+                val lessonFromDB = daoLessons.findById(lesson.id)
+                lessonFromDB?.let { //когда lessonFromDB не равна NULL
+                    daoLessons.update(lesson)
+                } ?: run { //когда lessonFromDB равна NULL
+                    daoLessons.insert(lesson)
+                }
+            }
+
+
         }
 
 

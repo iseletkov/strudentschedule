@@ -39,8 +39,8 @@ class CActivityLesson : AppCompatActivity() {
         val sId = intent.getStringExtra(getString(R.string.PARAM_LESSON_ID))
         val id = UUID.fromString(sId)
         lifecycleScope.launch {
-            lesson = daoLessons.findById(id)
-            showLesson()
+            lesson = daoLessons.findById(id)?: CLesson(id, "", LocalDateTime.now())
+                showLesson()
         }
 
 
@@ -95,7 +95,14 @@ class CActivityLesson : AppCompatActivity() {
             }
 
             lifecycleScope.launch {
-                daoLessons.update(lesson)
+
+                val lessonFromDB = daoLessons.findById(id)
+                lessonFromDB?.let {
+                    daoLessons.update(lesson)
+                } ?: run {
+                    daoLessons.insert(lesson)
+                }
+
             }
             finish()
 
