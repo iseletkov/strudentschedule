@@ -66,12 +66,8 @@ class CActivityLessonList : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-
-
-
-
-
-
+        val retrofit = CRetrofitBuilder.getRetrofit()
+        val service = retrofit.create(IServerAPITemplate::class.java)
 
         //Обработчик клика на элемент списка, открывает форму редактирования/просмотра выбанного элемента.
         val listener = object : CRecyclerViewLessonListAdapter.IClickListener
@@ -85,7 +81,10 @@ class CActivityLessonList : AppCompatActivity() {
             override fun onItemDeleteClick(lesson: CLesson, index: Int) {
                 lifecycleScope.launch {
                     daoLessons.delete(lesson)
+                    ///Отправка на сервер информации об удалении элемента.
+                    service.deleteLesson(lesson.id)
                 }
+
             }
         }
 
@@ -132,8 +131,7 @@ class CActivityLessonList : AppCompatActivity() {
             }
         }
 
-        val retrofit = CRetrofitBuilder.getRetrofit()
-        val service = retrofit.create(IServerAPITemplate::class.java)
+
         lifecycleScope.launch {
             val temp_lessons = service.getAllLessons()
             val lessonsFromDB = daoLessons.getAll()

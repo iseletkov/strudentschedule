@@ -15,6 +15,8 @@ import ru.studyit.studentschedule.dao.IDAOLessons
 import ru.studyit.studentschedule.databinding.ActivityLessonBinding
 import ru.studyit.studentschedule.model.CLesson
 import ru.studyit.studentschedule.util.CDatabase
+import ru.studyit.studentschedule.util.rest.CRetrofitBuilder
+import ru.studyit.studentschedule.util.rest.IServerAPITemplate
 import java.util.*
 
 class CActivityLesson : AppCompatActivity() {
@@ -102,6 +104,10 @@ class CActivityLesson : AppCompatActivity() {
                 } ?: run {
                     daoLessons.insert(lesson)
                 }
+
+                val retrofit = CRetrofitBuilder.getRetrofit()
+                val service = retrofit.create(IServerAPITemplate::class.java)
+                service.saveLesson(lesson)
 
             }
             finish()
