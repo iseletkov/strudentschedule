@@ -113,6 +113,13 @@ class CActivityLesson : AppCompatActivity() {
             finish()
 
         }
+
+        binding.buttonMap.setOnClickListener {
+            val intent = Intent(this, CActivityMap::class.java)
+            startActivity(intent)
+        }
+
+
     }
     /*
      * Отображение данных из урока на форме.

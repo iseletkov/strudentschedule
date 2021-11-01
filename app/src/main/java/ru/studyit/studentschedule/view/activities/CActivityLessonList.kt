@@ -133,7 +133,15 @@ class CActivityLessonList : AppCompatActivity() {
 
 
         lifecycleScope.launch {
-            val temp_lessons = service.getAllLessons()
+
+            val temp_lessons : List<CLesson>
+            try {
+                temp_lessons = service.getAllLessons()
+            }
+            catch(e : Exception)
+            {
+                return@launch
+            }
             val lessonsFromDB = daoLessons.getAll()
             lessonsFromDB
                 .filter {currentLesson ->

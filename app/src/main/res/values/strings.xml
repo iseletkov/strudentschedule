@@ -11,4 +11,6 @@
     <string name="PARAM_LOGIN" translatable="false">LOGIN</string>
     <string name="FILE_NAME_PREFERENCES" translatable="false">Preferences</string>
     <string name="PARAM_LESSON_ID" translatable="false">LESSON_ID</string>
+    <string name="title_activity_cmap">CActivityMap</string>
+    <string name="Map">View on map</string>
 </resources>

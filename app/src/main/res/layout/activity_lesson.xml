@@ -6,11 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".view.activities.CActivityLesson"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/buttonSave"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/Save" />
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Save" />
+        <Button
+            android:id="@+id/buttonMap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Map" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

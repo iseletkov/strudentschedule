@@ -9,4 +9,6 @@
     <string name="Time">Время</string>
     <string name="Save">Сохранить</string>
     <string name="AddLesson">Добавить урок</string>
+    <string name="Map">Посмотреть на карте</string>
+    <string name="title_activity_cmap">Карта</string>
 </resources>
