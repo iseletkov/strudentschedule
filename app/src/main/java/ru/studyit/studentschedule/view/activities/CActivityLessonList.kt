@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,7 @@ import ru.studyit.studentschedule.R
 import ru.studyit.studentschedule.dao.IDAOLessons
 import ru.studyit.studentschedule.databinding.ActivityLessonListBinding
 import ru.studyit.studentschedule.model.CLesson
+import ru.studyit.studentschedule.services.CServiceGoogleDrive
 import ru.studyit.studentschedule.util.CDatabase
 import ru.studyit.studentschedule.util.rest.CRetrofitBuilder
 import ru.studyit.studentschedule.util.rest.IServerAPITemplate
@@ -164,6 +166,19 @@ class CActivityLessonList : AppCompatActivity() {
 
         }
 
+        //Для работы Excel
+        System.setProperty(
+            "org.apache.poi.javax.xml.stream.XMLInputFactory",
+            "com.fasterxml.aalto.stax.InputFactoryImpl"
+        );
+        System.setProperty(
+            "org.apache.poi.javax.xml.stream.XMLOutputFactory",
+            "com.fasterxml.aalto.stax.OutputFactoryImpl"
+        );
+        System.setProperty(
+            "org.apache.poi.javax.xml.stream.XMLEventFactory",
+            "com.fasterxml.aalto.stax.EventFactoryImpl"
+        );
 
 
 
@@ -207,6 +222,14 @@ class CActivityLessonList : AppCompatActivity() {
                 }
 
                 finishAffinity()
+                true
+            }
+            R.id.miDownloadFromGD -> {
+                lifecycleScope.launch {
+                    var strings = CServiceGoogleDrive.download()
+                    Toast.makeText(this@CActivityLessonList, strings.toString(),  Toast.LENGTH_LONG).show()
+
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

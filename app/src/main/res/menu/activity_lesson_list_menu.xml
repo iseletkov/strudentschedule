@@ -8,6 +8,10 @@
         android:icon="@drawable/ic_baseline_account_box_24"
         app:showAsAction="never" />
     <item
+        android:id="@+id/miDownloadFromGD"
+        android:title="Google drive"
+        />
+    <item
         android:id="@+id/miExit"
         android:title="@string/Exit"
         />
