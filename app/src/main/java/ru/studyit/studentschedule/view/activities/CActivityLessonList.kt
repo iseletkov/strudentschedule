@@ -10,10 +10,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -29,18 +31,22 @@ import ru.studyit.studentschedule.util.CDatabase
 import ru.studyit.studentschedule.util.rest.CRetrofitBuilder
 import ru.studyit.studentschedule.util.rest.IServerAPITemplate
 import ru.studyit.studentschedule.view.adapters.CRecyclerViewLessonListAdapter
+import ru.studyit.studentschedule.viewmodels.CViewModelLessonList
 import java.util.UUID
 import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
 class CActivityLessonList : AppCompatActivity() {
     private lateinit var binding: ActivityLessonListBinding
 
     private val lessons = ArrayList<CLesson>()
 
     private lateinit var adapter : CRecyclerViewLessonListAdapter
-    private lateinit var daoLessons : IDAOLessons
+    //private lateinit var daoLessons : IDAOLessons
 
     private val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+
+    private val viewModelLessonList by viewModels<CViewModelLessonList>()
 
 
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -68,8 +74,8 @@ class CActivityLessonList : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val retrofit = CRetrofitBuilder.getRetrofit()
-        val service = retrofit.create(IServerAPITemplate::class.java)
+        //val retrofit = CRetrofitBuilder.getRetrofit()
+        //val service = retrofit.create(IServerAPITemplate::class.java)
 
         //Обработчик клика на элемент списка, открывает форму редактирования/просмотра выбанного элемента.
         val listener = object : CRecyclerViewLessonListAdapter.IClickListener
@@ -82,9 +88,9 @@ class CActivityLessonList : AppCompatActivity() {
 
             override fun onItemDeleteClick(lesson: CLesson, index: Int) {
                 lifecycleScope.launch {
-                    daoLessons.delete(lesson)
-                    ///Отправка на сервер информации об удалении элемента.
-                    service.deleteLesson(lesson.id)
+//                    daoLessons.delete(lesson)
+//                    ///Отправка на сервер информации об удалении элемента.
+//                    service.deleteLesson(lesson.id)
                 }
 
             }
@@ -105,7 +111,7 @@ class CActivityLessonList : AppCompatActivity() {
                 R.id.miAddLesson -> {
                     val lesson = CLesson(UUID.randomUUID(), "", LocalDateTime.now())
                     lifecycleScope.launch {
-                        daoLessons.insert(lesson)
+//                        daoLessons.insert(lesson)
 
                         val intent = Intent(this@CActivityLessonList, CActivityLesson::class.java)
                         intent.putExtra(getString(R.string.PARAM_LESSON_ID), lesson.id.toString())
@@ -121,50 +127,17 @@ class CActivityLessonList : AppCompatActivity() {
         }
 
 
-        val db = CDatabase.getDatabase(this)
-        daoLessons = db.daoLessons()
-        lifecycleScope.launch {
-            createInitialData(daoLessons)
-        }
+        //val db = CDatabase.getDatabase(this)
+        //daoLessons = db.daoLessons()
+//        lifecycleScope.launch {
+//            createInitialData(daoLessons)
+//        }
 
-        lifecycleScope.launch {
-            daoLessons.getAllFlow().collect { test_lessons ->
-                adapter.updateData(test_lessons)
-            }
-        }
-
-
-        lifecycleScope.launch {
-
-            val temp_lessons : List<CLesson>
-            try {
-                temp_lessons = service.getAllLessons()
-            }
-            catch(e : Exception)
-            {
-                return@launch
-            }
-            val lessonsFromDB = daoLessons.getAll()
-            lessonsFromDB
-                .filter {currentLesson ->
-                    return@filter !temp_lessons.contains(currentLesson)
-                }
-                .forEach { currentLesson ->
-                    //Удалять
-                    daoLessons.delete(currentLesson)
-                }
-
-            temp_lessons.forEach { lesson ->
-                val lessonFromDB = daoLessons.findById(lesson.id)
-                lessonFromDB?.let { //когда lessonFromDB не равна NULL
-                    daoLessons.update(lesson)
-                } ?: run { //когда lessonFromDB равна NULL
-                    daoLessons.insert(lesson)
-                }
-            }
-
+        viewModelLessonList.lessons.observeForever { test_lessons ->
+            adapter.updateData(test_lessons)
 
         }
+
 
         //Для работы Excel
         System.setProperty(
@@ -183,21 +156,7 @@ class CActivityLessonList : AppCompatActivity() {
 
 
     }
-    private suspend fun createInitialData(daoLessons : IDAOLessons) = withContext(Dispatchers.IO)
-    {
-        if (daoLessons.getAll().isNotEmpty())
-            return@withContext
 
-        lessons.add(CLesson(UUID.fromString("b75d453c-96f6-48a0-9619-15dc70590d59"), "Математика", LocalDateTime.parse("2021-09-30 08:00",formatter)))
-        lessons.add(CLesson(UUID.fromString("3f1a4f26-d983-4b59-a4a7-ebc59b68a34a"), "Численные методы", LocalDateTime.parse("2021-09-30 09:45",formatter)))
-        lessons.add(CLesson(UUID.fromString("85fae227-4459-4897-bb53-c63bf95f6b1c"), "Физкультура", LocalDateTime.parse("2021-09-30 11:30",formatter)))
-
-        lessons.forEach { lesson ->
-            daoLessons.insert(lesson)
-
-
-        }
-    }
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
